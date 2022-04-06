@@ -11,6 +11,8 @@ All code was build on R version 3.6.3 GUI 1.70 El Capitan build, and R studio ve
 
 In order to run the code, open the .R files, download the indicated datasets, set the proper working directory, and run through the code.
 
+Updates relative to the previous bioRxiv iteration include an aditional non-coding RNA analysis, additional secondary statistical controls for our buffering factor analysis, updated cell line information, and an update to figure names and numbers. 
+
 ORGANIZATION
 
 R CODE:
@@ -26,11 +28,13 @@ Protein_filtered_analysis_3cat.R
 
 •	Calculate protein expression difference for all genes upon chrm arm gain or loss (ex. gain chrm 5, protein expression diff in chrm 1,2,3,4,5,6, etc. )
 
+
 RNA_filtered_analysis_3cat.R
 
 •	Figure 1, S1
 
 •	Calculates RNA expression difference for all genes upon chrm arm gain or loss (ex. gain chrm 5, RNA expression diff in chrm 1,2,3,4,5,6, etc. )
+
 
 ChrmArm.Scatterplot.Protein.RNA.R
 
