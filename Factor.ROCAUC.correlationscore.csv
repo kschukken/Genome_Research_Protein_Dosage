@@ -1,0 +1,191 @@
+"","data","Chrm_CN","Gene_Type","Category","p_value","Corr_coef","significant","ROCauc"
+"cor","Protein-protein interaction","Gain","Protein","Buffering",0.121294860151082,-0.0157625311828662,FALSE,0.569047179130511
+"cor1","Protein-protein interaction","Loss","Protein","Buffering",0.585223336885752,0.00555273991074044,FALSE,0.579793359662347
+"cor2","Protein-protein interaction","Gain","Protein","Anti-Scaling",0.121294860151082,-0.0157625311828662,FALSE,0.610300407450182
+"cor3","Protein-protein interaction","Loss","Protein","Anti-Scaling",0.585223336885752,0.00555273991074044,FALSE,0.598737337432874
+"cor4","Protein-protein interaction","Gain","Protein","Scaling",0.121294860151082,-0.0157625311828662,FALSE,0.534343749243473
+"cor5","Protein-protein interaction","Loss","Protein","Scaling",0.585223336885752,0.00555273991074044,FALSE,0.549938052171212
+"cor6","Protein complex (CORUM)","Gain","Protein","Buffering",6.3569654573199e-05,-0.040671338197276,TRUE,0.558463263599453
+"cor7","Protein complex (CORUM)","Loss","Protein","Buffering",4.39406590264371e-07,0.051356390543125,TRUE,0.571000602243332
+"cor8","Protein complex (CORUM)","Gain","Protein","Anti-Scaling",6.3569654573199e-05,-0.040671338197276,TRUE,0.476216042735455
+"cor9","Protein complex (CORUM)","Loss","Protein","Anti-Scaling",4.39406590264371e-07,0.051356390543125,TRUE,0.449098684965599
+"cor10","Protein complex (CORUM)","Gain","Protein","Scaling",6.3569654573199e-05,-0.040671338197276,TRUE,0.443959910101079
+"cor11","Protein complex (CORUM)","Loss","Protein","Scaling",4.39406590264371e-07,0.051356390543125,TRUE,0.4377600973564
+"cor12","Protein regulatory sites","Gain","Protein","Buffering",0.388311213114256,0.00877694937574414,FALSE,0.501160160695248
+"cor13","Protein regulatory sites","Loss","Protein","Buffering",0.074238046036237,-0.0181609060538498,FALSE,0.49751557954537
+"cor14","Protein regulatory sites","Gain","Protein","Anti-Scaling",0.388311213114256,0.00877694937574414,FALSE,0.497644743545687
+"cor15","Protein regulatory sites","Loss","Protein","Anti-Scaling",0.074238046036237,-0.0181609060538498,FALSE,0.484512313723595
+"cor16","Protein regulatory sites","Gain","Protein","Scaling",0.388311213114256,0.00877694937574414,FALSE,0.499617351539067
+"cor17","Protein regulatory sites","Loss","Protein","Scaling",0.074238046036237,-0.0181609060538498,FALSE,0.510497721090538
+"cor18","Sumoylation sites","Gain","Protein","Buffering",0.489176571225336,-0.00703658263439725,FALSE,0.527456620020614
+"cor19","Sumoylation sites","Loss","Protein","Buffering",0.35599667217988,0.00939078361054659,FALSE,0.525637899719722
+"cor20","Sumoylation sites","Gain","Protein","Anti-Scaling",0.489176571225336,-0.00703658263439725,FALSE,0.464770330605859
+"cor21","Sumoylation sites","Loss","Protein","Anti-Scaling",0.35599667217988,0.00939078361054659,FALSE,0.459148519755719
+"cor22","Sumoylation sites","Gain","Protein","Scaling",0.489176571225336,-0.00703658263439725,FALSE,0.483000156616607
+"cor23","Sumoylation sites","Loss","Protein","Scaling",0.35599667217988,0.00939078361054659,FALSE,0.488351881594726
+"cor24","Ubiquitination sites","Gain","Protein","Buffering",0.252755296020982,-0.0116356595816274,FALSE,0.571644537634641
+"cor25","Ubiquitination sites","Loss","Protein","Buffering",0.0010382108184368,-0.0333616948129111,TRUE,0.560231144458571
+"cor26","Ubiquitination sites","Gain","Protein","Anti-Scaling",0.252755296020982,-0.0116356595816274,FALSE,0.600876192648345
+"cor27","Ubiquitination sites","Loss","Protein","Anti-Scaling",0.0010382108184368,-0.0333616948129111,TRUE,0.653222710166901
+"cor28","Ubiquitination sites","Gain","Protein","Scaling",0.252755296020982,-0.0116356595816274,FALSE,0.540892867818054
+"cor29","Ubiquitination sites","Loss","Protein","Scaling",0.0010382108184368,-0.0333616948129111,TRUE,0.500217396542819
+"cor30","Phosphorylation sites","Gain","Protein","Buffering",0.114065456588958,-0.0160760344435254,FALSE,0.537902337921447
+"cor31","Phosphorylation sites","Loss","Protein","Buffering",0.0350447265314631,0.0214431288989714,FALSE,0.539057342481742
+"cor32","Phosphorylation sites","Gain","Protein","Anti-Scaling",0.114065456588958,-0.0160760344435254,FALSE,0.531212377954371
+"cor33","Phosphorylation sites","Loss","Protein","Anti-Scaling",0.0350447265314631,0.0214431288989714,FALSE,0.551408421777501
+"cor34","Phosphorylation sites","Gain","Protein","Scaling",0.114065456588958,-0.0160760344435254,FALSE,0.530214480761601
+"cor35","Phosphorylation sites","Loss","Protein","Scaling",0.0350447265314631,0.0214431288989714,FALSE,0.477039374559168
+"cor36","Methylation sites","Gain","Protein","Buffering",0.348342580196551,-0.00954123745753915,FALSE,0.542568632696904
+"cor37","Methylation sites","Loss","Protein","Buffering",0.0812263800851228,0.0177384812985003,FALSE,0.540735493242243
+"cor38","Methylation sites","Gain","Protein","Anti-Scaling",0.348342580196551,-0.00954123745753915,FALSE,0.45248642576822
+"cor39","Methylation sites","Loss","Protein","Anti-Scaling",0.0812263800851228,0.0177384812985003,FALSE,0.426831534247072
+"cor40","Methylation sites","Gain","Protein","Scaling",0.348342580196551,-0.00954123745753915,FALSE,0.470891099087918
+"cor41","Methylation sites","Loss","Protein","Scaling",0.0812263800851228,0.0177384812985003,FALSE,0.485472323237403
+"cor42","Acetylation sites","Gain","Protein","Buffering",0.994328832246477,7.23163146952396e-05,FALSE,0.531345232199464
+"cor43","Acetylation sites","Loss","Protein","Buffering",0.0195551032104399,-0.0237511276776841,FALSE,0.528020604685838
+"cor44","Acetylation sites","Gain","Protein","Anti-Scaling",0.994328832246477,7.23163146952396e-05,FALSE,0.459905470843369
+"cor45","Acetylation sites","Loss","Protein","Anti-Scaling",0.0195551032104399,-0.0237511276776841,FALSE,0.427426350220783
+"cor46","Acetylation sites","Gain","Protein","Scaling",0.994328832246477,7.23163146952396e-05,FALSE,0.480544240239006
+"cor47","Acetylation sites","Loss","Protein","Scaling",0.0195551032104399,-0.0237511276776841,FALSE,0.500723461935466
+"cor48","Percent gene amplification","Gain","Protein","Buffering",0.0268961906587266,0.0225280212551455,TRUE,0.493915804275497
+"cor49","Percent gene amplification","Loss","Protein","Buffering",5.45294793559987e-12,0.0700942658075536,TRUE,0.494512798042954
+"cor50","Percent gene amplification","Gain","Protein","Anti-Scaling",0.0268961906587266,0.0225280212551455,TRUE,0.468460290501855
+"cor51","Percent gene amplification","Loss","Protein","Anti-Scaling",5.45294793559987e-12,0.0700942658075536,TRUE,0.536262258774078
+"cor52","Percent gene amplification","Gain","Protein","Scaling",0.0268961906587266,0.0225280212551455,TRUE,0.518993181843284
+"cor53","Percent gene amplification","Loss","Protein","Scaling",5.45294793559987e-12,0.0700942658075536,TRUE,0.489231163201983
+"cor54","RNA neutral variance","Gain","Protein","Buffering",0.872850368600419,-0.00162826723296052,FALSE,0.643054090605589
+"cor55","RNA neutral variance","Loss","Protein","Buffering",8.35631066009543e-48,0.146981776533687,TRUE,0.632335303786131
+"cor56","RNA neutral variance","Gain","Protein","Anti-Scaling",0.872850368600419,-0.00162826723296052,FALSE,0.710075953959226
+"cor57","RNA neutral variance","Loss","Protein","Anti-Scaling",8.35631066009543e-48,0.146981776533687,TRUE,0.782747074848834
+"cor58","RNA neutral variance","Gain","Protein","Scaling",0.872850368600419,-0.00162826723296052,FALSE,0.578299608063236
+"cor59","RNA neutral variance","Loss","Protein","Scaling",8.35631066009543e-48,0.146981776533687,TRUE,0.525491650866856
+"cor60","Protein neutral variance","Gain","Protein","Buffering",0.00145634437029631,-0.0326532719107134,TRUE,0.55403294754403
+"cor61","Protein neutral variance","Loss","Protein","Buffering",0.118689001140176,-0.0160085784813372,FALSE,0.528283836606969
+"cor62","Protein neutral variance","Gain","Protein","Anti-Scaling",0.00145634437029631,-0.0326532719107134,TRUE,0.605399638934233
+"cor63","Protein neutral variance","Loss","Protein","Anti-Scaling",0.118689001140176,-0.0160085784813372,FALSE,0.552896477929783
+"cor64","Protein neutral variance","Gain","Protein","Scaling",0.00145634437029631,-0.0326532719107134,TRUE,0.519347293369049
+"cor65","Protein neutral variance","Loss","Protein","Scaling",0.118689001140176,-0.0160085784813372,FALSE,0.509078703645852
+"cor66","mRNA decay rate","Gain","Protein","Buffering",0.67356465430096,0.0078915070383147,FALSE,0.527592058721299
+"cor67","mRNA decay rate","Loss","Protein","Buffering",0.798185564709465,0.00479001806688762,FALSE,0.525885197776101
+"cor68","mRNA decay rate","Gain","Protein","Anti-Scaling",0.67356465430096,0.0078915070383147,FALSE,0.539826265645432
+"cor69","mRNA decay rate","Loss","Protein","Anti-Scaling",0.798185564709465,0.00479001806688762,FALSE,0.483082427837239
+"cor70","mRNA decay rate","Gain","Protein","Scaling",0.67356465430096,0.0078915070383147,FALSE,0.518170270080494
+"cor71","mRNA decay rate","Loss","Protein","Scaling",0.798185564709465,0.00479001806688762,FALSE,0.52443208963505
+"cor72","mRNA abundance","Gain","Protein","Buffering",0.00543067146544334,-0.0328752190576376,TRUE,0.5119261408056
+"cor73","mRNA abundance","Loss","Protein","Buffering",0.000369672945268462,0.0420971034351612,TRUE,0.526447827709803
+"cor74","mRNA abundance","Gain","Protein","Anti-Scaling",0.00543067146544334,-0.0328752190576376,TRUE,0.499817061070596
+"cor75","mRNA abundance","Loss","Protein","Anti-Scaling",0.000369672945268462,0.0420971034351612,TRUE,0.520620284027224
+"cor76","mRNA abundance","Gain","Protein","Scaling",0.00543067146544334,-0.0328752190576376,TRUE,0.512891441867098
+"cor77","mRNA abundance","Loss","Protein","Scaling",0.000369672945268462,0.0420971034351612,TRUE,0.52374113282599
+"cor78","Protein abundance","Gain","Protein","Buffering",0.012973799173905,-0.0293789075112231,TRUE,0.513789890159034
+"cor79","Protein abundance","Loss","Protein","Buffering",0.633700300063896,0.00563605093097506,FALSE,0.507134483414881
+"cor80","Protein abundance","Gain","Protein","Anti-Scaling",0.012973799173905,-0.0293789075112231,TRUE,0.500124026392816
+"cor81","Protein abundance","Loss","Protein","Anti-Scaling",0.633700300063896,0.00563605093097506,FALSE,0.536048322699493
+"cor82","Protein abundance","Gain","Protein","Scaling",0.012973799173905,-0.0293789075112231,TRUE,0.514928965773064
+"cor83","Protein abundance","Loss","Protein","Scaling",0.633700300063896,0.00563605093097506,FALSE,0.504462989785284
+"cor84","Protein length","Gain","Protein","Buffering",0.0754661855658638,0.0210224643239427,FALSE,0.514923762174119
+"cor85","Protein length","Loss","Protein","Buffering",8.78847741010054e-08,0.0632154619317166,TRUE,0.535372144436256
+"cor86","Protein length","Gain","Protein","Anti-Scaling",0.0754661855658638,0.0210224643239427,FALSE,0.561758425526285
+"cor87","Protein length","Loss","Protein","Anti-Scaling",8.78847741010054e-08,0.0632154619317166,TRUE,0.533529893649435
+"cor88","Protein length","Gain","Protein","Scaling",0.0754661855658638,0.0210224643239427,FALSE,0.500012725781079
+"cor89","Protein length","Loss","Protein","Scaling",8.78847741010054e-08,0.0632154619317166,TRUE,0.553535390324756
+"cor90","mRNA length","Gain","Protein","Buffering",8.24886004448489e-15,0.0916318159939614,TRUE,0.525501035753674
+"cor91","mRNA length","Loss","Protein","Buffering",0.0376041735727239,-0.024587327458128,FALSE,0.515822565380414
+"cor92","mRNA length","Gain","Protein","Anti-Scaling",8.24886004448489e-15,0.0916318159939614,TRUE,0.567995919531676
+"cor93","mRNA length","Loss","Protein","Anti-Scaling",0.0376041735727239,-0.024587327458128,FALSE,0.514057529166279
+"cor94","mRNA length","Gain","Protein","Scaling",8.24886004448489e-15,0.0916318159939614,TRUE,0.545480542641746
+"cor95","mRNA length","Loss","Protein","Scaling",0.0376041735727239,-0.024587327458128,FALSE,0.51358966704454
+"cor96","Transcription rate","Gain","Protein","Buffering",0.00543066443288115,-0.0328752240268937,TRUE,0.511926556737523
+"cor97","Transcription rate","Loss","Protein","Buffering",0.000369672878350226,0.0420971039965354,TRUE,0.526448058227719
+"cor98","Transcription rate","Gain","Protein","Anti-Scaling",0.00543066443288115,-0.0328752240268937,TRUE,0.499817405588354
+"cor99","Transcription rate","Loss","Protein","Anti-Scaling",0.000369672878350226,0.0420971039965354,TRUE,0.520620284027224
+"cor100","Transcription rate","Gain","Protein","Scaling",0.00543066443288115,-0.0328752240268937,TRUE,0.512891983389697
+"cor101","Transcription rate","Loss","Protein","Scaling",0.000369672878350226,0.0420971039965354,TRUE,0.523741403819359
+"cor102","Translation rate","Gain","Protein","Buffering",0.466009560704543,-0.0086219262447678,FALSE,0.505927154681256
+"cor103","Translation rate","Loss","Protein","Buffering",2.22617403387001e-05,-0.0501277573142117,TRUE,0.521862273105825
+"cor104","Translation rate","Gain","Protein","Anti-Scaling",0.466009560704543,-0.0086219262447678,FALSE,0.514679212625336
+"cor105","Translation rate","Loss","Protein","Anti-Scaling",2.22617403387001e-05,-0.0501277573142117,TRUE,0.534168015282078
+"cor106","Translation rate","Gain","Protein","Scaling",0.466009560704543,-0.0086219262447678,FALSE,0.51027624872855
+"cor107","Translation rate","Loss","Protein","Scaling",2.22617403387001e-05,-0.0501277573142117,TRUE,0.537880862209845
+"cor108","Protein half life","Gain","Protein","Buffering",0.229589101621666,-0.0140411393551794,FALSE,0.514281795461982
+"cor109","Protein half life","Loss","Protein","Buffering",0.0854675152698853,-0.0200985854645317,FALSE,0.511276300771921
+"cor110","Protein half life","Gain","Protein","Anti-Scaling",0.229589101621666,-0.0140411393551794,FALSE,0.514830814855744
+"cor111","Protein half life","Loss","Protein","Anti-Scaling",0.0854675152698853,-0.0200985854645317,FALSE,0.617262169562899
+"cor112","Protein half life","Gain","Protein","Scaling",0.229589101621666,-0.0140411393551794,FALSE,0.510988153052903
+"cor113","Protein half life","Loss","Protein","Scaling",0.0854675152698853,-0.0200985854645317,FALSE,0.555910959463762
+"cor114","Loops in protein score","Gain","Protein","Buffering",0.025335520286608,-0.0272389287025302,TRUE,0.512113663018268
+"cor115","Loops in protein score","Loss","Protein","Buffering",1.3620772978286e-06,0.0587982683765814,TRUE,0.523770025512937
+"cor116","Loops in protein score","Gain","Protein","Anti-Scaling",0.025335520286608,-0.0272389287025302,TRUE,0.51315450815756
+"cor117","Loops in protein score","Loss","Protein","Anti-Scaling",1.3620772978286e-06,0.0587982683765814,TRUE,0.513932099677516
+"cor118","Loops in protein score","Gain","Protein","Scaling",0.025335520286608,-0.0272389287025302,TRUE,0.508367769061772
+"cor119","Loops in protein score","Loss","Protein","Scaling",1.3620772978286e-06,0.0587982683765814,TRUE,0.535419975667313
+"cor120","Intrinsic protein disorder","Gain","Protein","Buffering",0.0169173264124008,-0.0349989963326131,TRUE,0.512526719386532
+"cor121","Intrinsic protein disorder","Loss","Protein","Buffering",4.70773138229228e-05,0.0595988310610223,TRUE,0.519350766072164
+"cor122","Intrinsic protein disorder","Gain","Protein","Anti-Scaling",0.0169173264124008,-0.0349989963326131,TRUE,0.521944154107241
+"cor123","Intrinsic protein disorder","Loss","Protein","Anti-Scaling",4.70773138229228e-05,0.0595988310610223,TRUE,0.495413130896905
+"cor124","Intrinsic protein disorder","Gain","Protein","Scaling",0.0169173264124008,-0.0349989963326131,TRUE,0.50564338010393
+"cor125","Intrinsic protein disorder","Loss","Protein","Scaling",4.70773138229228e-05,0.0595988310610223,TRUE,0.525863268744037
+"cor126","Low complexity score","Gain","Protein","Buffering",0.0041701389350895,-0.0354878812685316,TRUE,0.509682760728077
+"cor127","Low complexity score","Loss","Protein","Buffering",1.8416177434244e-10,0.0788547573228183,TRUE,0.522569794132782
+"cor128","Low complexity score","Gain","Protein","Anti-Scaling",0.0041701389350895,-0.0354878812685316,TRUE,0.493394986288971
+"cor129","Low complexity score","Loss","Protein","Anti-Scaling",1.8416177434244e-10,0.0788547573228183,TRUE,0.538314396617354
+"cor130","Low complexity score","Gain","Protein","Scaling",0.0041701389350895,-0.0354878812685316,TRUE,0.508244272786352
+"cor131","Low complexity score","Loss","Protein","Scaling",1.8416177434244e-10,0.0788547573228183,TRUE,0.547646135205841
+"cor132","Protein polarity","Gain","Protein","Buffering",0.0148160212185414,-0.0478045299897017,TRUE,0.516372781282989
+"cor133","Protein polarity","Loss","Protein","Buffering",0.0930608326185795,0.0329566666523679,FALSE,0.521585916442049
+"cor134","Protein polarity","Gain","Protein","Anti-Scaling",0.0148160212185414,-0.0478045299897017,TRUE,0.532524188225913
+"cor135","Protein polarity","Loss","Protein","Anti-Scaling",0.0930608326185795,0.0329566666523679,FALSE,0.515313030888839
+"cor136","Protein polarity","Gain","Protein","Scaling",0.0148160212185414,-0.0478045299897017,TRUE,0.506680937199055
+"cor137","Protein polarity","Loss","Protein","Scaling",0.0930608326185795,0.0329566666523679,FALSE,0.519247412665638
+"cor138","Protein polyampholyte score","Gain","Protein","Buffering",0.72891618308819,0.0073331260193298,FALSE,0.520300941172282
+"cor139","Protein polyampholyte score","Loss","Protein","Buffering",0.0839206514558321,0.0365595040613118,FALSE,0.535848454693057
+"cor140","Protein polyampholyte score","Gain","Protein","Anti-Scaling",0.72891618308819,0.0073331260193298,FALSE,0.526500328885024
+"cor141","Protein polyampholyte score","Loss","Protein","Anti-Scaling",0.0839206514558321,0.0365595040613118,FALSE,0.517090777110134
+"cor142","Protein polyampholyte score","Gain","Protein","Scaling",0.72891618308819,0.0073331260193298,FALSE,0.51365962828331
+"cor143","Protein polyampholyte score","Loss","Protein","Scaling",0.0839206514558321,0.0365595040613118,FALSE,0.536571054538654
+"cor144","Homology score","Gain","Protein","Buffering",0.00018237056935029,-0.0419935803669813,TRUE,0.498847694027063
+"cor145","Homology score","Loss","Protein","Buffering",2.9829630608711e-11,0.0745226459731941,TRUE,0.501891984974136
+"cor146","Homology score","Gain","Protein","Anti-Scaling",0.00018237056935029,-0.0419935803669813,TRUE,0.51209838188617
+"cor147","Homology score","Loss","Protein","Anti-Scaling",2.9829630608711e-11,0.0745226459731941,TRUE,0.527151826970367
+"cor148","Homology score","Gain","Protein","Scaling",0.00018237056935029,-0.0419935803669813,TRUE,0.503507552770658
+"cor149","Homology score","Loss","Protein","Scaling",2.9829630608711e-11,0.0745226459731941,TRUE,0.514834808125195
+"cor150","Dependency score","Gain","Protein","Buffering",1.43349603156398e-24,0.104555463696444,TRUE,0.602704300179883
+"cor151","Dependency score","Loss","Protein","Buffering",0.013793997036436,-0.0252303673808309,FALSE,0.593519738333654
+"cor152","Dependency score","Gain","Protein","Anti-Scaling",1.43349603156398e-24,0.104555463696444,TRUE,0.570560427087101
+"cor153","Dependency score","Loss","Protein","Anti-Scaling",0.013793997036436,-0.0252303673808309,FALSE,0.602225617643254
+"cor154","Dependency score","Gain","Protein","Scaling",1.43349603156398e-24,0.104555463696444,TRUE,0.587245529252463
+"cor155","Dependency score","Loss","Protein","Scaling",0.013793997036436,-0.0252303673808309,FALSE,0.565048598358699
+"cor156","Aggregation score","Gain","Protein","Buffering",0.0188858107210505,-0.0352769857566903,TRUE,0.531505731904895
+"cor157","Aggregation score","Loss","Protein","Buffering",0.187240261485156,-0.019819917028759,FALSE,0.51125694313747
+"cor158","Aggregation score","Gain","Protein","Anti-Scaling",0.0188858107210505,-0.0352769857566903,TRUE,0.525738099376386
+"cor159","Aggregation score","Loss","Protein","Anti-Scaling",0.187240261485156,-0.019819917028759,FALSE,0.529803631160453
+"cor160","Aggregation score","Gain","Protein","Scaling",0.0188858107210505,-0.0352769857566903,TRUE,0.525082544467726
+"cor161","Aggregation score","Loss","Protein","Scaling",0.187240261485156,-0.019819917028759,FALSE,0.499358689932276
+"cor162","Non-exponential decay delta","Gain","Protein","Buffering",7.03610513910292e-12,-0.204055369706581,TRUE,0.518691124730451
+"cor163","Non-exponential decay delta","Loss","Protein","Buffering",4.97035663761288e-09,0.174537769473293,TRUE,0.590672262552934
+"cor164","Non-exponential decay delta","Gain","Protein","Anti-Scaling",7.03610513910292e-12,-0.204055369706581,TRUE,0.629787824585209
+"cor165","Non-exponential decay delta","Loss","Protein","Anti-Scaling",4.97035663761288e-09,0.174537769473293,TRUE,0.562812534119445
+"cor166","Non-exponential decay delta","Gain","Protein","Scaling",7.03610513910292e-12,-0.204055369706581,TRUE,0.5529444985997
+"cor167","Non-exponential decay delta","Loss","Protein","Scaling",4.97035663761288e-09,0.174537769473293,TRUE,0.586170712287937
+"cor168","Mutation count (all)","Gain","Protein","Buffering",0.000323400989290004,-0.0365721049938147,TRUE,0.50721659880139
+"cor169","Mutation count (all)","Loss","Protein","Buffering",4.65894782003697e-21,0.0955870082556307,TRUE,0.512291022420942
+"cor170","Mutation count (all)","Gain","Protein","Anti-Scaling",0.000323400989290004,-0.0365721049938147,TRUE,0.507779783011284
+"cor171","Mutation count (all)","Loss","Protein","Anti-Scaling",4.65894782003697e-21,0.0955870082556307,TRUE,0.574537019698333
+"cor172","Mutation count (all)","Gain","Protein","Scaling",0.000323400989290004,-0.0365721049938147,TRUE,0.488932171175529
+"cor173","Mutation count (all)","Loss","Protein","Scaling",4.65894782003697e-21,0.0955870082556307,TRUE,0.550930567793206
+"cor174","Mutation count (frame shifts)","Gain","Protein","Buffering",0.000173761594096268,-0.0381840161551445,TRUE,0.504290633600279
+"cor175","Mutation count (frame shifts)","Loss","Protein","Buffering",1.07003940394055e-20,0.094700428021638,TRUE,0.510901394990654
+"cor176","Mutation count (frame shifts)","Gain","Protein","Anti-Scaling",0.000173761594096268,-0.0381840161551445,TRUE,0.513302020055907
+"cor177","Mutation count (frame shifts)","Loss","Protein","Anti-Scaling",1.07003940394055e-20,0.094700428021638,TRUE,0.579451213250618
+"cor178","Mutation count (frame shifts)","Gain","Protein","Scaling",0.000173761594096268,-0.0381840161551445,TRUE,0.509940955045105
+"cor179","Mutation count (frame shifts)","Loss","Protein","Scaling",1.07003940394055e-20,0.094700428021638,TRUE,0.551600015273053
+"cor180","Mutation count (nonsence and missense)","Gain","Protein","Buffering",0.000173761594096268,-0.0381840161551445,TRUE,0.504290633600279
+"cor181","Mutation count (nonsence and missense)","Loss","Protein","Buffering",1.07003940394055e-20,0.094700428021638,TRUE,0.510901394990654
+"cor182","Mutation count (nonsence and missense)","Gain","Protein","Anti-Scaling",0.000173761594096268,-0.0381840161551445,TRUE,0.513302020055907
+"cor183","Mutation count (nonsence and missense)","Loss","Protein","Anti-Scaling",1.07003940394055e-20,0.094700428021638,TRUE,0.579451213250618
+"cor184","Mutation count (nonsence and missense)","Gain","Protein","Scaling",0.000173761594096268,-0.0381840161551445,TRUE,0.509940955045105
+"cor185","Mutation count (nonsence and missense)","Loss","Protein","Scaling",1.07003940394055e-20,0.094700428021638,TRUE,0.551600015273053
+"cor186","5' UTR length","Gain","Protein","Buffering",0.00095620763082925,0.0248748085858121,TRUE,0.529734532488869
+"cor187","5' UTR length","Loss","Protein","Buffering",0.0115023053452131,0.019031815894104,FALSE,0.490768885304112
+"cor188","3' UTR length","Gain","Protein","Buffering",0.994420256223339,-6.0731521344826e-05,FALSE,0.522135314907262
+"cor189","3' UTR length","Loss","Protein","Buffering",0.000320874141529672,-0.031237190687692,TRUE,0.514086505152864
