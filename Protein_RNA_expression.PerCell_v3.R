@@ -74,7 +74,7 @@ RNA.Expression.filtered<-read.delim2("RNA_Expression_filtered.csv",
 #RNA Info. names, chrm location, etc. 
 #setwd()
 RNA_Info<-Protein_Info
-RNA_Info2<-RNA_Info[,c(2,3,11,12,22,14)]
+RNA_Info2<-RNA_Info[,c(2,3,11,12,22,14,23)]
 
 RNA_Info3<-RNA_Info2
 RNA_Info3$arm <- gsub('[0-9]+', '', RNA_Info3$'Chromosome band') #Find test RNA chromosome arm
@@ -4549,7 +4549,7 @@ NonCodingRNA.names<-read_tsv("NoncodingRNA.WrightMWetal2011.txt")
 ### also get ebi CCLE RNA-seq data with from the expression atlas 
 ##  Barretina J, et al. (2012) the cancer cell line encyclopedia enables predictive modelling of anticancer drug sensitivity
 ##  expression values across all genes (TPM) 
-setwd("/Volumes/Schukken_SSD/Depmap Aneuploidy/Protein.Quantile/RNA_Protein_comparison/")
+setwd("/Volumes/Schukken_SSD/Depmap Aneuploidy/Protein.Quantile/RNA_Protein_comparison/nonCodingRNA")
 RNA_Expression_with_ncRNA<- read_tsv("E-MTAB-2770-query-results.tpms.tsv")
 # 56443 genes 
 
@@ -4756,6 +4756,44 @@ RNA.Diff.ncRNA.log<-read.csv("RNA_ncRNA_diff_pvalue_all_log2.csv",
                                  dec=".", header = TRUE, sep=",")
 RNA.Diff.ncRNA.log<- RNA.Diff.ncRNA.log[,-1]
 
+#### Get coding RNA names
+## went to bioMart, from Ensembl (useast.ensembl.org) and downloaded a list 
+## of all Gene stable IDs, Transcript stable IDs, Protein Stable IDs, and Gene_Type
+# gene stable ID is the Ensemble_ID and Gene_type lists pseudogenes. 
+# data downloaded 2022 April 13
+setwd("/Volumes/Schukken_SSD/Depmap Aneuploidy/Protein.Quantile/RNA_Protein_comparison/nonCodingRNA")
+Ensemble_Gene_Info_GeneType<-read_tsv("biomart_export_GeneType.txt")
+
+table(Ensemble_Gene_Info_GeneType$`Gene type`)
+## lots of different kinds of pseudogenes. Lets see if any are in the CCLE transcript dataset. 
+## yes. 81 pseudogenes in this dataset. (see below) 
+
+# isolate entrez ID
+t.test_RNA_category2<-t.test_RNA_category
+t.test_RNA_category2$Entrez_ID<-t.test_RNA_category2$RNA_Name
+t.test_RNA_category2$Entrez_ID<- gsub("..y", "", t.test_RNA_category2$Entrez_ID)
+t.test_RNA_category2$Entrez_ID<- gsub(".*[..]", "", t.test_RNA_category2$Entrez_ID)
+# length 17118
+
+
+# Merge RNA data about entrez ID and Ensembl ID
+# get list of coding RNAs using ensembl gene type "protein coding"
+t.test_RNA_category3<-merge(t.test_RNA_category2, RNA_Info3, 
+                            by.x="Entrez_ID", by.y="Entrez Gene ID") #get: 16979 genes
+
+t.test_RNA_category4<-merge(t.test_RNA_category3, Ensemble_Gene_Info_GeneType[,c(1,4)], 
+                            by.x="Ensembl ID(supplied by Ensembl)", by.y="Gene stable ID")
+t.test_RNA_category4<-distinct(t.test_RNA_category4)
+CodingRNA<-subset(t.test_RNA_category4, `Gene type`=="protein_coding")$`Ensembl ID(supplied by Ensembl)`
+
+# get list of pseudogenes  using ensembl gene type "pseudogene*"
+t.test_RNA_category3<-merge(t.test_RNA_category2, RNA_Info3, 
+                            by.x="Entrez_ID", by.y="Entrez Gene ID") #get: 16979 genes
+
+t.test_RNA_category4<-merge(t.test_RNA_category3, Ensemble_Gene_Info_GeneType[,c(1,4)], 
+                            by.x="Ensembl ID(supplied by Ensembl)", by.y="Gene stable ID")
+t.test_RNA_category4<-distinct(t.test_RNA_category4)
+PseudoRNA<-subset(t.test_RNA_category4, `Gene type`!="protein_coding")$`Ensembl ID(supplied by Ensembl)`
 
 
 ### Step 5: Compare non-coding to coding RNA
@@ -4777,18 +4815,21 @@ RNA.Diff.ncRNA.ThreeGroups$RNA.Loss.Category<-factor(RNA.Diff.ncRNA.ThreeGroups$
 RNA_diff_ncRNA_only<- subset(RNA.Diff.ncRNA.ThreeGroups, `Ensembl_ID` %in% NonCodingRNA.names$`Ensembl gene ID`)
 # 4,760 non-coding RNA 
 
-RNA_diff_NOncRNA<- subset(RNA.Diff.ncRNA.ThreeGroups, ! `Ensembl_ID` %in% NonCodingRNA.names$`Ensembl gene ID`)
-# 33,223 coding genes with location data
+RNA_diff_NOncRNA<- subset(RNA.Diff.ncRNA.ThreeGroups, `Ensembl_ID` %in% CodingRNA)
+# 15,025 coding genes with location data
+
+RNA_diff_Pseudo<- subset(RNA.Diff.ncRNA.ThreeGroups, `Ensembl_ID` %in% PseudoRNA)
+# 81 pseudogenes 
 
 ## mean difference in expression upon chromosome gain or loss
 mean(RNA_diff_ncRNA_only$Diff.Gain) #non-coding mean diff upon gain = 0.167
-mean(RNA_diff_NOncRNA$Diff.Gain)  #coding mean diff upon gain = 0.188
+mean(RNA_diff_NOncRNA$Diff.Gain)  #coding mean diff upon gain = 0.277
 mean(RNA_diff_ncRNA_only$Diff.Loss)  #non-coding mean diff upon loss = -0.295 
-mean(RNA_diff_NOncRNA$Diff.Loss)  # coding mean diff upon loss = -0.2877
+mean(RNA_diff_NOncRNA$Diff.Loss)  # coding mean diff upon loss = -0.290
 
 ## Diff gain: 
 t.test(RNA_diff_ncRNA_only$Diff.Gain, RNA_diff_NOncRNA$Diff.Gain)
-# 0.003987  ncRNA more buffered
+# < 2.2e-16  coding more scaling
 
 ## Diff loss: 
 t.test(RNA_diff_ncRNA_only$Diff.Loss, RNA_diff_NOncRNA$Diff.Loss)
@@ -4801,6 +4842,7 @@ RNA_diff_ncRNA_only2<- merge(RNA_diff_ncRNA_only, NonCodingRNA.names[,c(10,13)],
 RNA_diff_ncRNA_only2$`Group name`<- sub("MicroRNA.*", "MicroRNAs", RNA_diff_ncRNA_only2$`Group name`)
 RNA_diff_ncRNA_only2$`Group name`<- sub("Small nucleolar RNA.*", "Small nucleolar RNA", RNA_diff_ncRNA_only2$`Group name`)
 RNA_diff_ncRNA_only2$`Group name`<- sub("Long non-coding.*", "Long non-coding RNAs", RNA_diff_ncRNA_only2$`Group name`)
+
 RNA_diff_ncRNA_only2$`Group name`<- factor(RNA_diff_ncRNA_only2$`Group name`, 
                                              level=c("Antisense RNAs", "Divergent transcripts", "Intronic transcripts", 
                                                       "Long intergenic non-protein coding RNAs", "Long non-coding RNAs", 
@@ -4815,41 +4857,46 @@ table(RNA_diff_ncRNA_only2$`Group name`)
 RNA_diff_lincRNA<- subset(RNA_diff_ncRNA_only2, `Group name` == "Long intergenic non-protein coding RNAs")
 mean(RNA_diff_lincRNA$Diff.Gain) #0.1392154
 mean(RNA_diff_lincRNA$Diff.Loss) #-0.2491367
-# 2171 Long intergenic non-protein coding RNAs
+# 1387 Long intergenic non-protein coding RNAs
 
 
 RNA_diff_microRNA<- subset(RNA_diff_ncRNA_only2, `Group name` == "MicroRNAs")
 mean(RNA_diff_microRNA$Diff.Gain) #0.08508667 
 mean(RNA_diff_microRNA$Diff.Loss) #-0.2191795
-# 1394 MicroRNAs
+# 679 MicroRNAs
 
 
 RNA_diff_asRNA<- subset(RNA_diff_ncRNA_only2, `Group name` == "Antisense RNAs")
 mean(RNA_diff_asRNA$Diff.Gain) #0.1949068 
 mean(RNA_diff_asRNA$Diff.Loss) #-0.3533054
-# 1698 Antisense RNAs
+# 1466 Antisense RNAs
 
 
 RNA_diff_dtRNA<- subset(RNA_diff_ncRNA_only2, `Group name` == "Divergent transcripts")
 mean(RNA_diff_dtRNA$Diff.Gain) #0.2977186 
 mean(RNA_diff_dtRNA$Diff.Loss) #-0.3556969
-# 566 Divergent transcripts
+# 534 Divergent transcripts
 
 
 RNA_diff_lncRNA<- subset(RNA_diff_ncRNA_only2, `Group name` == "Long non-coding RNAs")
 mean(RNA_diff_lncRNA$Diff.Gain) #0.1405558 
 mean(RNA_diff_lncRNA$Diff.Loss) #-0.2815256
-# 387 Long non-coding RNAs
+# 319 Long non-coding RNAs
 
 RNA_diff_snRNA<- subset(RNA_diff_ncRNA_only2, `Group name` == "Small nucleolar RNA")
 mean(RNA_diff_snRNA$Diff.Gain) #0.1679094 
 mean(RNA_diff_snRNA$Diff.Loss) #-0.3002559
-# 318 Small nucleolar RNA
+# 217 Small nucleolar RNA
 
 RNA_diff_itRNA<- subset(RNA_diff_ncRNA_only2, `Group name` == "Intronic transcripts")
 mean(RNA_diff_itRNA$Diff.Gain) #0.1240303 
 mean(RNA_diff_itRNA$Diff.Loss) #-0.3594183
-# 122 Intronic transcripts
+# 99 Intronic transcripts
+
+RNA_diff_snRNA<- subset(RNA_diff_ncRNA_only2, `Group name` == "Small nuclear RNAs")
+mean(RNA_diff_snRNA$Diff.Gain) #0.1121 
+mean(RNA_diff_snRNA$Diff.Loss) #-0.1887683
+# 15 Small nuclear RNAs
 
 
 ### get mean and SD per ncRNA type and plot as boxplot
@@ -4858,16 +4905,15 @@ mean(RNA_diff_itRNA$Diff.Loss) #-0.3594183
 
 RNA.Diff.ncRNA.ThreeGroups2<- merge(RNA.Diff.ncRNA.ThreeGroups, NonCodingRNA.names[,c(10,13)], 
                              by.x="Ensembl_ID", by.y="Ensembl gene ID", all.x=TRUE)
-RNA.Diff.ncRNA.ThreeGroups2$`Group name`[is.na(RNA.Diff.ncRNA.ThreeGroups2$`Group name`)]<-"Coding"
+RNA.Diff.ncRNA.ThreeGroups2$`Group name`[RNA.Diff.ncRNA.ThreeGroups2$Ensembl_ID %in% CodingRNA]<-"Coding"
+#RNA.Diff.ncRNA.ThreeGroups2$`Group name`[RNA.Diff.ncRNA.ThreeGroups2$Ensembl_ID %in% PseudoRNA]<-"Pseudogene" #81 pseudogenes
 RNA.Diff.ncRNA.ThreeGroups2$`Group name`<- sub("MicroRNA.*", "MicroRNAs", RNA.Diff.ncRNA.ThreeGroups2$`Group name`)
 RNA.Diff.ncRNA.ThreeGroups2$`Group name`<- sub("Small nucleolar RNA.*", "Small nucleolar RNA", RNA.Diff.ncRNA.ThreeGroups2$`Group name`)
 RNA.Diff.ncRNA.ThreeGroups2$`Group name`<- sub("Long non-coding.*", "Long non-coding RNAs", RNA.Diff.ncRNA.ThreeGroups2$`Group name`)
 RNA.Diff.ncRNA.ThreeGroups2$`Group name`<- factor(RNA.Diff.ncRNA.ThreeGroups2$`Group name`, 
-                                           level=c("Coding","Antisense RNAs", "Divergent transcripts",
+                                           level=c("Coding","Pseudogene","Antisense RNAs", "Divergent transcripts",
                                                    "Long intergenic non-protein coding RNAs", "Long non-coding RNAs", 
-                                                   "MicroRNAs", "Small nucleolar RNA",
-                                                   "Small nuclear RNAs"
-                                           ))
+                                                   "MicroRNAs", "Small nucleolar RNA"))
 
 ggplot(RNA.Diff.ncRNA.ThreeGroups2, aes(x=`Group name`, y=Diff.Gain, fill=`Group name`))+
   geom_boxplot(outlier.shape = NA)+
@@ -4904,51 +4950,59 @@ ggplot(RNA.Diff.ncRNA.ThreeGroups2, aes(x=`Group name`, y=Diff.Loss, fill=`Group
 
 ## t.test for significance upon GAIN
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
+       subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Pseudogene")$Diff.Gain )
+# Pseudogene  p-value = 0.07261 --> NS
+
+t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Antisense RNAs")$Diff.Gain )
-# Antisense RNAs  p-value = NS
+# Antisense RNAs  p-value = 7.163e-12 --> ***
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Divergent transcripts")$Diff.Gain )
-# Divergent transcripts  p-value = 3.729e-10, divergent scaling --> ***
+# Divergent transcripts  p-value = 0.2303 NS
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Long intergenic non-protein coding RNAs")$Diff.Gain )
-# Long intergenic non-protein coding RNAs  p-value= 0.003518, ncRNA buffered --> NS after correcting (0.0633)
+# Long intergenic non-protein coding RNAs  p-value= 1.823e-15, lincRNA buffered --> ***
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Long non-coding RNAs")$Diff.Gain )
-# Long non-coding RNAs  p-value = NS, ncRNA buffered
+# Long non-coding RNAs  p-value = 1.89e-05, lncRNA buffered --> **
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="MicroRNAs")$Diff.Gain )
-# MicroRNAs  p-value = 2.3e-11, ncRNA buffered --> ***
+# MicroRNAs  p-value < 2.2e-16 , microRNA buffered --> ***
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Small nucleolar RNA")$Diff.Gain )
-# Small nucleolar RNA  p-value = NS 
+# Small nucleolar RNA  p-value = 6.268e-10 --> ***
 
-t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
-       subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Small nuclear RNAs")$Diff.Gain )
-# Small nuclear RNAs  p-value = NS  ncRNA buffered
+#t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
+#       subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Small nuclear RNAs")$Diff.Gain )
+# Small nuclear RNAs  p-value = not enough datapoints
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Gain, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, is.na(`Group name`))$Diff.Gain )
-# Other RNAs  p-value = 0.0286, ncRNA buffered ("OTHER" RNAs)--> after correcting NS
+# Other RNAs  p-value < 2.2e-16, ncRNA buffered ("OTHER" RNAs) 
 
 
 
 ## t.test for significance upon LOSS
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
+       subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Pseudogene")$Diff.Loss )
+# Pseudogene  p-value 0.0803, ncRNA scaling --> NS
+
+t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Antisense RNAs")$Diff.Loss )
-# Antisense RNAs  p-value 5.466e-10, ncRNA scaling --> ***
+# Antisense RNAs  p-value 4.672e-09, ncRNA scaling --> ***
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Divergent transcripts")$Diff.Loss )
-# Divergent transcripts  p-value = 3.278e-07, ncRNA scaling --> ***
+# Divergent transcripts  p-value = 1.166e-06, ncRNA scaling --> ***
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Long intergenic non-protein coding RNAs")$Diff.Loss )
-# Long intergenic non-protein coding RNAs  p-value = 0.006299, ncRNA buffered --> after correcting == 0.1133 NS
+# Long intergenic non-protein coding RNAs  p-value = 0.004787, lincRNA buffered --> NS after corresting for 18 tests (P cutoff 0.01)
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Long non-coding RNAs")$Diff.Loss )
@@ -4956,14 +5010,14 @@ t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss,
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="MicroRNAs")$Diff.Loss )
-# MicroRNAs  p-value = 2.425e-08, ncRNA buffered --> ***
+# MicroRNAs  p-value = 2.064e-08, ncRNA buffered --> ***
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
        subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Small nucleolar RNA")$Diff.Loss )
 # Small nucleolar RNA  p-value = NS 
 
-t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
-       subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Small nuclear RNAs")$Diff.Loss )
+#t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
+#       subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Small nuclear RNAs")$Diff.Loss )
 # Small nuclear RNAs  p-value = 0.03756 ncRNA buffered--> NS after correcting
 
 t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss, 
@@ -4972,95 +5026,10 @@ t.test(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name`=="Coding")$Diff.Loss,
 
 
 ## to correct for multiple tests, p-values were multipled by 18
-## OR, significance < 2.78E-03  (*)
-## ** = 2.8E-04
-## *** = 2.8 E-05 or less
-
-
-##Scatterplots with categories colored in: 
-## scatterplot were not used in paper.
-#ncRNA Chrm gain graphs
-colnames(RNA_diff_ncRNA_only)
-ggplot(RNA_diff_ncRNA_only, aes(x=Diff.Gain, y=-log2(Pvalue.Gain), color=RNA.Gain.Category))+
-  geom_point(size=2)+
-  scale_color_manual(values=c("salmon2", "Gold2", "palegreen3"))+
-  xlab("Difference in ncRNA expression")+
-  ylab("log2(p-value)")+
-  labs(color = "Category")+ #legend title
-  theme_classic()+
-  #coord_cartesian(xlim=c(-4,4), ylim=c(0,200))+
-  ggtitle("ncRNA Gain scatterplot")
-#plot.scatter.ncRNA.category.Gain_log2
-
-#ncRNA Loss graphs
-ggplot(RNA_diff_ncRNA_only, aes(x=Diff.Loss, y=-log2(Pvalue.Loss), color=RNA.Loss.Category))+
-  geom_point(size=2)+
-  scale_color_manual(values=c("salmon2", "Gold2", "palegreen3"))+
-  xlab("Difference in ncRNA expression")+
-  ylab("log2(p-value)")+
-  labs(color = "Category:")+ #legend title
-  theme_classic()+
-  #coord_cartesian(xlim=c(-4, 4), ylim=c(0,200))+
-  ggtitle("ncRNA Loss scatterplot")
-
-
-#coding RNA Chrm gain graphs
-colnames(RNA_diff_NOncRNA)
-ggplot(RNA_diff_NOncRNA, aes(x=Diff.Gain, y=-log2(Pvalue.Gain), color=RNA.Gain.Category))+
-  geom_point(size=2)+
-  scale_color_manual(values=c("salmon2", "Gold2", "palegreen3"))+
-  xlab("Difference in coding-RNA expression")+
-  ylab("log2(p-value)")+
-  labs(color = "Category")+ #legend title
-  theme_classic()+
-  #coord_cartesian(xlim=c(-4, 4), ylim=c(0,250))+
-  ggtitle("coding-RNA Gain scatterplot")
-
-#coding-RNA Loss graphs
-ggplot(RNA_diff_NOncRNA, aes(x=Diff.Loss, y=-log2(Pvalue.Loss), color=RNA.Loss.Category))+
-  geom_point(size=2)+
-  scale_color_manual(values=c("salmon2", "Gold2", "palegreen3"))+
-  xlab("Difference in coding-RNA expression")+
-  ylab("log2(p-value)")+
-  labs(color = "Category:")+ #legend title
-  theme_classic()+
-  #coord_cartesian(xlim=c(-4, 4), ylim=c(0,250))+
-  ggtitle("coding-RNA Loss scatterplot")
-
-
-#scatterplot based on RNA type
-ggplot(RNA_diff_ncRNA_only2, aes(x=Diff.Gain, y=-log2(Pvalue.Gain), color=`Group name`))+ #color by rna type
-  geom_point(size=2)+
-  scale_color_manual(values=c("Red2", "orange2", "Gold2", 
-                              "green2", "cyan2", "blue", "Purple2",
-                              "grey10", "grey20","grey30", "grey40", 
-                              "grey50", "grey60", "grey70", "grey80"))+
-  xlab("Difference in ncRNA expression")+
-  ylab("log2(p-value)")+
-  labs(color = "Category:")+ #legend title
-  theme_classic()+
-  #coord_cartesian(xlim=c(-5, 5), ylim=c(0,100))+ #zoomed in
-  #coord_cartesian(xlim=c(-100, 100), ylim=c(0,200))+  #not zoomed in
-  ggtitle("ncRNA Gain scatterplot")
-# zoom = xlim=c(-5, 5), ylim=c(0,50)
-# No zoom = xlim=c(-100, 100), ylim=c(0,200)
-
-#chrm loss (long intergenic non-protein coding RNAs AS & buffered most)
-ggplot(RNA_diff_ncRNA_only2, aes(x=Diff.Loss, y=-log2(Pvalue.Loss), color=RNA_diff_ncRNA_only2$`Group name`))+ #color by rna type
-  geom_point(size=2)+
-  scale_color_manual(values=c("grey50","Red2", "orange2", "Gold2", 
-                              "green2", "cyan2", "blue", "purple2",
-                              "grey10", "grey20","grey30", "grey40", 
-                              "grey50", "grey60", "grey70", "grey80"))+
-  xlab("Difference in ncRNA expression")+
-  ylab("log2(p-value)")+
-  labs(color = "Category:")+ #legend title
-  theme_classic()+
-  #coord_cartesian(xlim=c(-5, 5), ylim=c(0,100))+ #zoomed in
-  #coord_cartesian(xlim=c(-100, 100), ylim=c(0,200))+  #not zoomed in
-  ggtitle("ncRNA Loss scatterplot")
-# zoom = xlim=c(-5, 5), ylim=c(0,50)
-# No zoom = xlim=c(-100, 100), ylim=c(0,200)
+## 0.01/18= 
+## OR, significance < 6E-04  (*)
+## ** = 6E-05
+## *** =6E-06 or less
 
 
 
@@ -5167,7 +5136,7 @@ ggplot(data= dat.m, aes(x=variable, fill=value)) +
 # plot.ncRNA.Bargraph.ThreeCat_log_snRNA
 
 
-## ncRNA bargraph: sn RNAs
+## ncRNA bargraph: antisense RNAs
 dat.m <- melt(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name` == "Antisense RNAs"), 
               id.vars='Ensembl_ID', measure.vars=c('RNA.Gain.Category','RNA.Loss.Category'))
 ggplot(data= dat.m, aes(x=variable, fill=value)) + 
@@ -5183,5 +5152,192 @@ ggplot(data= dat.m, aes(x=variable, fill=value)) +
 # 4x4
 # plot.ncRNA.Bargraph.ThreeCat_log_antisenseRNA
 
+## ncRNA bargraph: small nucleolar RNAs
+dat.m <- melt(subset(RNA.Diff.ncRNA.ThreeGroups2, `Group name` == "Small nucleolar RNA"), 
+              id.vars='Ensembl_ID', measure.vars=c('RNA.Gain.Category','RNA.Loss.Category'))
+ggplot(data= dat.m, aes(x=variable, fill=value)) + 
+  geom_bar(position="fill")+ #dodge (next to eachother)
+  scale_fill_manual(values=c("salmon2", "Gold2", "palegreen3"))+
+  xlab("Antisense RNA Difference upon aneuploidy: category")+
+  ylab("Percent of genes")+
+  labs(fill = "Protein Difference:\nCategory")+ #legend title
+  theme_classic()+
+  #coord_cartesian(ylim=c(0,6000))+
+  theme(axis.text.x = element_text(angle = 45, hjust=1))+
+  ggtitle("boxplot small nucleolar RNA category upon aneuploidy")
+# 4x4
+# plot.ncRNA.Bargraph.ThreeCat_log_smallnucleolar
 
-  
+###### Pseudogenes #####
+## Get list of Emsembl ID and Gene_Type 
+## Gene_Type lists whether or not gene is a pseudogene. 
+
+t.test_RNA_category$RNA_Name[1:10] #Approved symbol
+t.test_RNA_category$RNA_ID[1:10] #Entrez Gene ID and approved Symbol
+RNA_Info3# has chrm arm, entrez ID and Enselbl ID (see above) 
+
+## Note: I also tested Psedogene expression at the protein level, but there were only 3 
+## pseudogenes with protein expression in our dataset, not enough to draw any real conclusions
+
+
+## went to bioMart, from Ensembl (useast.ensembl.org) and downloaded a list 
+## of all Gene stable IDs, Transcript stable IDs, Protein Stable IDs, and Gene_Type
+# gene stable ID is the Ensemble_ID and Gene_type lists pseudogenes. 
+# data downloaded 2022 April 13
+setwd("/Volumes/Schukken_SSD/Depmap Aneuploidy/Protein.Quantile/RNA_Protein_comparison/nonCodingRNA")
+Ensemble_Gene_Info_GeneType<-read_tsv("biomart_export_GeneType.txt")
+
+table(Ensemble_Gene_Info_GeneType$`Gene type`)
+## lots of different kinds of pseudogenes. Lets see if any are in the CCLE transcript dataset. 
+
+# isolate entrez ID
+t.test_RNA_category2<-t.test_RNA_category
+t.test_RNA_category2$Entrez_ID<-t.test_RNA_category2$RNA_Name
+t.test_RNA_category2$Entrez_ID<- gsub("..y", "", t.test_RNA_category2$Entrez_ID)
+t.test_RNA_category2$Entrez_ID<- gsub(".*[..]", "", t.test_RNA_category2$Entrez_ID)
+# length 17118
+
+
+# Merge RNA data about entrez ID and Ensembl ID
+t.test_RNA_category3<-merge(t.test_RNA_category2, RNA_Info3, 
+                            by.x="Entrez_ID", by.y="Entrez Gene ID") #get: 16979 genes
+
+t.test_RNA_category4<-merge(t.test_RNA_category3, Ensemble_Gene_Info_GeneType[,c(1,4)], 
+                            by.x="Ensembl ID(supplied by Ensembl)", by.y="Gene stable ID")
+
+t.test_RNA_category4<-distinct(t.test_RNA_category4)
+
+table(t.test_RNA_category4$`Gene type`)
+#lncRNA             polymorphic_pseudogene 
+#40                                 24 
+#protein_coding   transcribed_processed_pseudogene 
+#16822                                  2 
+#transcribed_unitary_pseudogene transcribed_unprocessed_pseudogene 
+#15                                 22 
+#unitary_pseudogene             unprocessed_pseudogene 
+#1                                  3 
+
+### See if I can observe other non-coding RNAs in this dataset (names from Wright et al.)
+## get list of non-Coding RNA ensembl IDs
+### If you use this data about non-coding RNA (ncRNA), cite: 
+## Wright MW et al. Human genomics 2011 Jan;5(2)90-98 PMID 21296742
+#  Naming 'junk': human non-protein coding RNA (ncRNA) gene nomenclature
+#setwd()
+#NonCodingRNA.names<-read_tsv("NoncodingRNA.WrightMWetal2011.txt")
+
+#t.test_RNA_category5<- merge(t.test_RNA_category4, NonCodingRNA.names[,c(10,13)], 
+#                                    by.x="Ensembl ID(supplied by Ensembl)", 
+#                             by.y="Ensembl gene ID", 
+#                             all.x=TRUE)
+#table(t.test_RNA_category5$`Group name`)
+#Antisense RNAs          Long intergenic non-protein coding RNAs 
+#8                                                5 
+#Long non-coding RNAs with FAM root symbol Long non-coding RNAs with non-systematic symbols 
+#1                                               11 
+#MicroRNA non-coding host genes        Small nucleolar RNA non-coding host genes 
+#1                                                1 
+
+
+
+#now remove categories with less than 10 genes, and remove lncRNAs (not pseudogene)
+# unitary_pseudogene, unprocessed_pseudogene, transcribed_processed_pseudogene
+t.test_RNA_category4<- t.test_RNA_category4[!t.test_RNA_category4$`Gene type`=="lncRNA",]
+
+## rename all the different pseudogenes as "pseudogene"
+t.test_RNA_category4$Pseudo<-"Coding"
+t.test_RNA_category4[t.test_RNA_category4$`Gene type`=="unprocessed_pseudogene",]$Pseudo<-"Pseudogene"
+t.test_RNA_category4[t.test_RNA_category4$`Gene type`=="unitary_pseudogene",]$Pseudo<-"Pseudogene"
+t.test_RNA_category4[t.test_RNA_category4$`Gene type`=="transcribed_unprocessed_pseudogene",]$Pseudo<-"Pseudogene"
+t.test_RNA_category4[t.test_RNA_category4$`Gene type`=="transcribed_unitary_pseudogene",]$Pseudo<-"Pseudogene"
+t.test_RNA_category4[t.test_RNA_category4$`Gene type`=="transcribed_processed_pseudogene",]$Pseudo<-"Pseudogene"
+t.test_RNA_category4[t.test_RNA_category4$`Gene type`=="polymorphic_pseudogene",]$Pseudo<-"Pseudogene"
+
+
+
+t.test_RNA_category4$Pseudo<-factor(t.test_RNA_category4$Pseudo, level=c("Coding", "Pseudogene"))
+
+ggplot(t.test_RNA_category4, aes(x=Pseudo, y=RNA.Gene.Diff.Gain, fill=Pseudo))+
+  geom_boxplot(outlier.shape = NA)+
+  scale_fill_manual(values=c("grey80","grey50"))+
+  theme_classic()+
+  ggtitle("Diff upon gain")+
+  #stat_summary(fun=mean, geom="point", shape=20, size=2, color="black", fill="black")+
+  geom_hline(yintercept=0)+
+  coord_cartesian(ylim=c(-0.5,1.5))+
+  xlab("")+
+  ylab("Difference upon gain")
+# plot.box.Pseudo.RNA.Gain
+# 7x5
+
+ggplot(t.test_RNA_category4, aes(x=Pseudo, y=RNA.Gene.Diff.Loss, fill=Pseudo))+
+  geom_boxplot(outlier.shape = NA)+
+  scale_fill_manual(values=c("grey80","grey50"))+
+  theme_classic()+
+  ggtitle("Diff upon loss")+
+  #stat_summary(fun=mean, geom="point", shape=20, size=2, color="black", fill="black")+
+  geom_hline(yintercept=0)+
+  coord_cartesian(ylim=c(-1.5, 0.5))+
+  xlab("")+
+  ylab("Difference upon loss")
+# plot.box.Pseudo.RNA.Loss
+# 7x5
+
+## CHRM GAIN
+t.test(subset(t.test_RNA_category4,Pseudo=="Coding")$RNA.Gene.Diff.Gain, 
+       subset(t.test_RNA_category4,Pseudo=="Pseudogene")$RNA.Gene.Diff.Gain)
+## p=6.777e-08 
+
+## CHRM LOSS
+t.test(subset(t.test_RNA_category4,Pseudo=="Coding")$RNA.Gene.Diff.Loss, 
+       subset(t.test_RNA_category4,Pseudo=="Pseudogene")$RNA.Gene.Diff.Loss)
+## p= 8.72e-11
+
+
+### Bar graph of RNA and Protein quantiles Scaling/Buffered
+t.test_RNA_category4$Three.RNA.Gain<- cut(t.test_RNA_category4$RNA.Gene.Diff.Gain,
+                                                    breaks=c(-Inf,-0.1,0.25,Inf),
+                                                    include.lowest=TRUE,
+                                                    labels=c("Anti-Scaling","Buffering","Scaling"))
+t.test_RNA_category4$Three.RNA.Loss<- cut(t.test_RNA_category4$RNA.Gene.Diff.Loss,
+                                                    breaks=c(-Inf,-0.25,0.1,Inf),
+                                                    include.lowest=TRUE,
+                                                    labels=c("Scaling", "Buffering","Anti-Scaling"))
+t.test_RNA_category4$Three.RNA.Loss<-factor(t.test_RNA_category4$Three.RNA.Loss, 
+                                                      levels=c("Anti-Scaling","Buffering","Scaling"))
+
+## coding RNA bargraph
+dat.m <- melt(subset(t.test_RNA_category4,Pseudo=="Coding"), 
+              id.vars='Gene type', 
+              measure.vars=c('Three.RNA.Gain','Three.RNA.Loss'))
+ggplot(data= dat.m, aes(x=variable, fill=value)) + 
+  geom_bar(position="fill")+ #dodge (next to eachother)
+  scale_fill_manual(values=c("salmon2", "Gold2", "palegreen3"))+
+  xlab("coding RNA Difference upon aneuploidy: category")+
+  ylab("Percent of genes")+
+  labs(fill = "Protein Difference:\nCategory")+ #legend title
+  theme_classic()+
+  #coord_cartesian(ylim=c(0,6000))+
+  theme(axis.text.x = element_text(angle = 45, hjust=1))+
+  ggtitle("boxplot coding RNA category upon aneuploidy")
+#4x4
+# plot.Bargraph.ThreeCat_proteinCoding
+
+## coding RNA bargraph
+dat.m <- melt(subset(t.test_RNA_category4,Pseudo=="Pseudogene"), 
+              id.vars='Gene type', 
+              measure.vars=c('Three.RNA.Gain','Three.RNA.Loss'))
+ggplot(data= dat.m, aes(x=variable, fill=value)) + 
+  geom_bar(position="fill")+ #dodge (next to eachother)
+  scale_fill_manual(values=c("salmon2", "Gold2", "palegreen3"))+
+  xlab("coding RNA Difference upon aneuploidy: category")+
+  ylab("Percent of genes")+
+  labs(fill = "Protein Difference:\nCategory")+ #legend title
+  theme_classic()+
+  #coord_cartesian(ylim=c(0,6000))+
+  theme(axis.text.x = element_text(angle = 45, hjust=1))+
+  ggtitle("boxplot polymorph pseudogene upon aneuploidy")
+#4x4
+# plot.Bargraph.ThreeCat_Pseudogene
+
+
+

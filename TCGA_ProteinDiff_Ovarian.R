@@ -368,6 +368,7 @@ TCGA_ovarian_Diff.Pvalue<- merge(t.test_TCGA_ovarian.R, t.test_TCGA_ovarian,
 #write.csv(t.test_TCGA_ovarian.ThreeGroups, 
 #          file="TCGA_ovarian.diff.pvalue.RNA.Protein.ThreeGroups.csv")
 
+t.test_TCGA_ovarian.ThreeGroups<- read.csv("TCGA_ovarian.diff.pvalue.RNA.Protein.ThreeGroups.csv")
 
 ###### Categorize genes by significance and difference (not used in paper) #####
 ## Categorize genes by if they scale or buffer upon chrm gain/loss. plot. 
@@ -844,13 +845,13 @@ RNAExp.ChrmCN.Ovarian<- function(RNA){
 }
 
 ###### Boxplots of specific gene expression per gain/neutral/loss ####
-
+DataFileLocation<-"/Volumes/Schukken_SSD/Depmap Aneuploidy/Protein.Quantile/RNA_Protein_comparison"
 ## plot specific protein expression per category
 ## plot and get p-values for Protein expression changes by chromosome CN
 ProtExp.ChrmCN.Ovarian("KRAS") #NS gain & loss
 ProtExp.ChrmCN.Ovarian("ERBB2") #NS gain, Sig loss
 ProtExp.ChrmCN.Ovarian("EGFR") #Sig gain
-ProtExp.ChrmCN.Ovarian("TP53") #not enough datapoints, but also NS
+ProtExp.ChrmCN.Ovarian("TP53") #not enough datapoints, but also: pvalue loss= 0.5712, Diff.loss= 0.1080914
 ProtExp.ChrmCN.Ovarian("NF1")  #NS gain & Loss
 ProtExp.ChrmCN.Ovarian("BRCA1") #no location data, even then, not enough data
 ProtExp.ChrmCN.Ovarian("BRCA2") #no location data, even then, not enough data
@@ -860,11 +861,13 @@ ProtExp.ChrmCN.Ovarian("PTEN")  # NS gain and loss
 ProtExp.ChrmCN.Ovarian("GAB2")  #NS gain and loss
 ProtExp.ChrmCN.Ovarian("RHOA")  #NS gain and loss
 ProtExp.ChrmCN.Ovarian("CDK4")  #NS gain and loss
-ProtExp.ChrmCN.Ovarian("RAD21")  #Significant
 ProtExp.ChrmCN.Ovarian("HLA-B")  #NS
+ProtExp.ChrmCN.Ovarian("ATM")  #gain 0.00156, loss=0.03 NS
 ProtExp.ChrmCN.Ovarian("PPP2R1A")  #NS
 ProtExp.ChrmCN.Ovarian("CASP8")  # NS / NS
+ProtExp.ChrmCN.Ovarian("MEN1")  # NS / NS
 ProtExp.ChrmCN.Ovarian("KIF1A")  # gain sig (0.011), loss NS
+ProtExp.ChrmCN.Ovarian("MTOR")  # NS/NS
 
 ## plot and get p-values for RNA expression changes by chromosome CN
 RNAExp.ChrmCN.Ovarian("KRAS") #Very Significant
@@ -885,6 +888,7 @@ RNAExp.ChrmCN.Ovarian("KIF1A")  # sig gain p= 5E-04
 RNAExp.ChrmCN.Ovarian("CTNND1")  # sig loss
 RNAExp.ChrmCN.Ovarian("MEN1")  # Sig
 RNAExp.ChrmCN.Ovarian("NIPBL")  #sig
+RNAExp.ChrmCN.Ovarian("MTOR")  #??
 
 
 ## Bargraph of difference upon chromosome gain or loss
@@ -921,10 +925,10 @@ ggplot(Subset.Ovarian.Onco,
 ## I tried making bargraph of TSG TP53, BRCA1 and BRCA2, but there were not enough datapoints to graph. 
 ## Since so few cells, many tsg are excluded due to not having 10+ cells/category
 ## TSG.Bailey.list 
-TSG_test<- subset(TCGA_ovarian_Diff.Pvalue, Gene %in% TSG.Bailey.list)
+TSG_test<- subset(t.test_TCGA_ovarian.ThreeGroups, Gene %in% TSG.Bailey.list)
 
-TSG<- c("PTEN" , "NF1", "SMAD4", "ARID2", "ATM", "CASP8", "CDKN2A", "CTNND1", "CUL3", "HLA-A", 
-        "HLA-B", "KIF1A", "MEN1", "NIPBL", "PSIP1", "RUNX1"
+TSG<- c("PTEN" , "NF1", "SMAD4", "ARID2", "ATM", "CASP8", "CDKN2A", "CTNND1", "CUL3", 
+         "KIF1A", "MEN1", "NIPBL", "PSIP1", "RUNX1", "TP53"
 ) 
 
 Subset.Ovarian.TSG<- data.frame(Gene=character(), 
@@ -939,17 +943,18 @@ for (i in 1:length(TSG)){
 Subset.Ovarian.TSG<- Subset.Ovarian.TSG[order(Subset.Ovarian.TSG$Diff.Loss),]
 Subset.Ovarian.TSG$Gene<- factor(Subset.Ovarian.TSG$Gene, levels= Subset.Ovarian.TSG$Gene)
 
+
 ggplot(Subset.Ovarian.TSG, 
        aes(y=Diff.Loss, x=Gene))+
   geom_bar(stat="identity")+
   theme_classic()+
   geom_hline(yintercept=0)+
-  geom_hline(yintercept=mean(TCGA_ovarian_Diff.Pvalue$Diff.Loss,na.rm=TRUE), color="black", size =1)+
+  geom_hline(yintercept=mean(t.test_TCGA_ovarian.ThreeGroups$Diff.Loss,na.rm=TRUE), color="black", size =1)+
   theme(axis.text.x = element_text(angle = 45, hjust=1, color="black"))+
   coord_cartesian(ylim=c(-.75,0.75))+
   ylab("Difference upon chrm loss")+
   xlab("Gene name")
-# plot.barplot.TSG.Diff.Ovarian_v1
+# plot.barplot.TSG.Diff.Ovarian_v3
 # 6x4
 
 
@@ -1488,8 +1493,10 @@ length(Protein.Loss.Diff.Ovarian$ChrmArm)
 write.csv(Protein.Loss.Diff.Ovarian, 
           file= "Protein.Loss.Diff.PerChromosome.TCGA.Ovarian.csv")
 #setwd()#set working directory 
-#Protein.Gain.Diff.Ovarian<-read.delim2("Protein.Gain.Diff.PerChromosome.TCGA.Ovarian.csv", 
-#                                     dec=".", header = TRUE, sep=",")
+Protein.Gain.Diff.Ovarian<-read.delim2("Protein.Gain.Diff.PerChromosome.TCGA.Ovarian.csv", 
+                                     dec=".", header = TRUE, sep=",")
+Protein.Loss.Diff.Ovarian<-read.delim2("Protein.Loss.Diff.PerChromosome.TCGA.Ovarian.csv", 
+                                     dec=".", header = TRUE, sep=",")
 
 
 Protein.Gain.Diff.Ovarian$ChrmArm <- factor(Protein.Gain.Diff.Ovarian$ChrmArm, 
@@ -1689,8 +1696,10 @@ length(RNA.Loss.Diff.Ovarian$ChrmArm)
 write.csv(RNA.Loss.Diff.Ovarian, 
           file= "RNA.Loss.Diff.PerChromosome.TCGA.Ovarian.csv")
 #setwd() #set working directory 
-#RNA.Gain.Diff.Ovarian<-read.delim2("RNA.Gain.Diff.PerChromosome.TCGA.Ovarian.csv", 
-#                                     dec=".", header = TRUE, sep=",")
+RNA.Gain.Diff.Ovarian<-read.delim2("RNA.Gain.Diff.PerChromosome.TCGA.Ovarian.csv", 
+                                     dec=".", header = TRUE, sep=",")
+RNA.Loss.Diff.Ovarian<-read.delim2("RNA.Loss.Diff.PerChromosome.TCGA.Ovarian.csv", 
+                                     dec=".", header = TRUE, sep=",")
 
 
 RNA.Gain.Diff.Ovarian$ChrmArm <- factor(RNA.Gain.Diff.Ovarian$ChrmArm, 
